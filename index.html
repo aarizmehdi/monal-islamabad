@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monal Islamabad — Dining in the Clouds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf6f0;
+      --cream-dark: #f0e8dc;
+      --terracotta: #c1694f;
+      --terracotta-dark: #a85238;
+      --terracotta-light: #d4846c;
+      --green: #2d5a3d;
+      --green-light: #3d7a53;
+      --gold: #c9a96e;
+      --gold-light: #e0c898;
+      --ink: #1a1412;
+      --ink-soft: #4a3f3a;
+      --ink-muted: #8a7a72;
+      --surface: #ffffff;
+      --border: rgba(26, 20, 18, 0.08);
+      --shadow-sm: 0 1px 2px rgba(26, 20, 18, 0.04);
+      --shadow-md: 0 4px 12px rgba(26, 20, 18, 0.06);
+      --shadow-lg: 0 12px 40px rgba(26, 20, 18, 0.1);
+      --shadow-xl: 0 24px 60px rgba(26, 20, 18, 0.15);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+    nav.scrolled {
+      background: rgba(250, 246, 240, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 14px 48px;
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      transition: color 0.3s;
+    }
+    nav.scrolled .nav-logo { color: var(--ink); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    nav.scrolled .nav-links a { color: var(--ink-soft); }
+    nav.scrolled .nav-links a:hover { color: var(--terracotta); }
+
+    .nav-cta {
+      padding: 10px 24px;
+      background: var(--gold);
+      color: var(--ink);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    nav.scrolled .nav-cta { box-shadow: var(--shadow-sm); }
+
+    .mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .mobile-toggle span { width: 24px; height: 2px; background: var(--cream); transition: 0.3s; border-radius: 2px; }
+    nav.scrolled .mobile-toggle span { background: var(--ink); }
+
+    /* Hero */
+    .hero {
+      height: 100vh;
+      min-height: 600px;
+      background: linear-gradient(135deg, #1a1412 0%, #2d2320 40%, #3d2f28 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(201, 169, 110, 0.08) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 30%, rgba(193, 105, 79, 0.06) 0%, transparent 50%);
+    }
+    .hero-particles {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: float-particle 8s infinite ease-in-out;
+    }
+    @keyframes float-particle {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.2; }
+      50% { transform: translateY(-30px) scale(1.4); opacity: 0.5; }
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 0 24px; }
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201, 169, 110, 0.3);
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      color: var(--cream);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.5s;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero p {
+      font-size: 1.125rem;
+      color: rgba(255,255,255,0.7);
+      font-weight: 300;
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s ease forwards 0.9s; }
+    .btn-primary {
+      padding: 16px 40px;
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201, 169, 110, 0.3); }
+    .btn-secondary {
+      padding: 16px 40px;
+      background: transparent;
+      color: var(--cream);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: fadeUp 0.8s ease forwards 1.2s;
+      opacity: 0;
+    }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold), transparent); animation: scrollPulse 2s infinite; }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* Sections common */
+    section { padding: 120px 48px; }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--ink-muted);
+      max-width: 500px;
+      line-height: 1.7;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* Reveal animation */
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* About */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 60px; }
+    .about-image {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .about-image-placeholder {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+    }
+    .about-image-placeholder svg { width: 64px; height: 64px; margin-bottom: 12px; opacity: 0.6; }
+    .about-image-placeholder p { font-size: 0.85rem; font-weight: 300; letter-spacing: 0.02em; }
+    .about-image::after {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -40%;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(201, 169, 110, 0.08) 0%, transparent 60%);
+      animation: slowRotate 30s infinite linear;
+    }
+    @keyframes slowRotate { to { transform: rotate(360deg); } }
+
+    .about-text h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--ink);
+    }
+    .about-text p {
+      color: var(--ink-soft);
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+    .about-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 40px; }
+    .stat { text-align: center; }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--terracotta);
+    }
+    .stat-label { font-size: 0.8rem; color: var(--ink-muted); margin-top: 4px; }
+
+    /* Menu */
+    #menu { background: var(--surface); }
+    .menu-header { text-align: center; margin-bottom: 60px; }
+    .menu-header .section-subtitle { margin: 0 auto; }
+    .menu-tabs { display: flex; justify-content: center; gap: 4px; margin-bottom: 48px; background: var(--cream); padding: 4px; border-radius: 12px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .menu-tab {
+      flex: 1;
+      padding: 12px 24px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .menu-tab.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+    .menu-tab:hover:not(.active) { color: var(--ink-soft); }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+    .menu-item {
+      background: var(--cream);
+      border-radius: var(--radius-md);
+      padding: 28px;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .menu-item:hover { border-color: var(--border); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .menu-item-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .menu-item-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+    .menu-item-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600; color: var(--terracotta); }
+    .menu-item-desc { font-size: 0.875rem; color: var(--ink-muted); line-height: 1.6; }
+    .menu-category { display: none; }
+    .menu-category.active { display: grid; }
+
+    /* Gallery placeholder */
+    #gallery { background: var(--cream); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 60px; }
+    .gallery-item {
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--green) 0%, var(--terracotta) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover .gallery-item-inner { transform: scale(1.05); }
+    .gallery-item:nth-child(2) .gallery-item-inner { background: linear-gradient(135deg, var(--terracotta) 0%, var(--gold) 100%); }
+    .gallery-item:nth-child(3) .gallery-item-inner { background: linear-gradient(135deg, var(--green-light) 0%, var(--green) 100%); }
+    .gallery-item:nth-child(4) .gallery-item-inner { background: linear-gradient(135deg, var(--gold) 0%, var(--terracotta-light) 100%); }
+    .gallery-item:nth-child(5) .gallery-item-inner { background: linear-gradient(135deg, var(--ink) 0%, var(--green) 100%); }
+    .gallery-item:nth-child(6) .gallery-item-inner { background: linear-gradient(135deg, var(--terracotta-dark) 0%, var(--gold) 100%); }
+
+    .gallery-icon { text-align: center; color: rgba(255,255,255,0.6); }
+    .gallery-icon svg { width: 32px; height: 32px; margin-bottom: 8px; }
+    .gallery-icon span { display: block; font-size: 0.75rem; letter-spacing: 0.05em; font-weight: 300; }
+
+    /* Reservation */
+    #reservation {
+      background: linear-gradient(135deg, #1a1412 0%, #2d2320 100%);
+      color: var(--cream);
+    }
+    #reservation .section-label { color: var(--gold); }
+    #reservation .section-title { color: var(--cream); }
+    #reservation .section-subtitle { color: rgba(255,255,255,0.6); }
+    .reservation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+    .reservation-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .reservation-info p {
+      color: rgba(255,255,255,0.7);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+    .info-item { display: flex; gap: 16px; margin-bottom: 20px; align-items: flex-start; }
+    .info-icon {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(201, 169, 110, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .info-icon svg { width: 18px; height: 18px; }
+    .info-text h4 { font-size: 0.9rem; font-weight: 500; color: var(--cream); margin-bottom: 2px; }
+    .info-text p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin: 0; }
+
+    .reservation-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.05);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--gold);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+    .form-group select { appearance: none; cursor: pointer; }
+    .form-group select option { background: #2d2320; color: var(--cream); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-submit { margin-top: 8px; }
+
+    /* Footer */
+    footer {
+      background: #0f0c0a;
+      padding: 80px 48px 40px;
+      color: rgba(255,255,255,0.5);
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; max-width: 1200px; margin: 0 auto; }
+    .footer-brand h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--cream);
+      margin-bottom: 12px;
+    }
+    .footer-brand p {
+      font-size: 0.875rem;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      margin-bottom: 20px;
+    }
+    .footer-col a {
+      display: block;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 4px 0;
+      transition: color 0.3s;
+    }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 60px auto 0;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .about-grid { gap: 48px; }
+      .reservation-grid { gap: 48px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      nav.scrolled { padding: 12px 24px; }
+      .nav-links { display: none; }
+      .mobile-toggle { display: flex; }
+      section { padding: 80px 24px; }
+      .hero h1 { font-size: 2.5rem; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .about-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .reservation-grid { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .menu-tabs { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Monal</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#reservation">Reserve</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#reservation" class="nav-cta">Book a Table</a>
+    <button class="mobile-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Since 1998 • Islamabad</div>
+      <h1>Dining in the <em>Clouds</em></h1>
+      <p>Perched atop the Margalla Hills, Monal offers breathtaking views of Islamabad alongside the finest Pakistani cuisine — an experience that lingers long after the meal.</p>
+      <div class="hero-actions">
+        <a href="#reservation" class="btn-primary">Reserve a Table →</a>
+        <a href="#menu" class="btn-secondary">Explore Menu</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <div class="reveal">
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title">Islamabad's Most Iconic Dining Destination</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-image reveal reveal-delay-1">
+          <div class="about-image-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <p>Margalla Hills, Islamabad</p>
+          </div>
+        </div>
+        <div class="about-text reveal reveal-delay-2">
+          <h3>Where the Mountains Meet the Plate</h3>
+          <p>Nestled at 1,500 meters above sea level on the scenic Pir Sohawa Road, Monal has been a beloved institution since 1998. What began as a small hillside restaurant has grown into Islamabad's most celebrated dining experience, drawing visitors from across Pakistan and around the world.</p>
+          <p>Our chefs masterfully blend traditional Pakistani recipes with contemporary techniques, sourcing ingredients from local markets and our own herb gardens. Every dish tells a story — of the land, the culture, and the hands that prepared it.</p>
+          <div class="about-stats">
+            <div class="stat">
+              <div class="stat-number">26+</div>
+              <div class="stat-label">Years of Excellence</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">500K+</div>
+              <div class="stat-label">Guests Annually</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">4.7★</div>
+              <div class="stat-label">Guest Rating</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section id="menu">
+    <div class="container">
+      <div class="menu-header reveal">
+        <div class="section-label">Our Menu</div>
+        <h2 class="section-title">Crafted with Tradition, Served with Pride</h2>
+        <p class="section-subtitle">A carefully curated selection of Pakistani classics and contemporary specialties</p>
+      </div>
+      <div class="menu-tabs reveal reveal-delay-1">
+        <button class="menu-tab active" data-category="appetizers">Appetizers</button>
+        <button class="menu-tab" data-category="mains">Mains</button>
+        <button class="menu-tab" data-category="desserts">Desserts</button>
+      </div>
+
+      <!-- Appetizers -->
+      <div class="menu-category active" id="appetizers">
+        <div class="menu-grid">
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Chicken Tikka</span><span class="menu-item-price">Rs. 650</span></div><div class="menu-item-desc">Charcoal-grilled chicken thighs marinated in yogurt and aromatic spices</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Seekh Kebab</span><span class="menu-item-price">Rs. 720</span></div><div class="menu-item-desc">Hand-minced lamb skewers with fresh herbs and green chilies</div></div>
+          <div class="menu-item reveal reveal-delay-2"><div class="menu-item-header"><span class="menu-item-name">Dahi Puri</span><span class="menu-item-price">Rs. 450</span></div><div class="menu-item-desc">Crisp puris filled with spiced yogurt, tamarind chutney, and chickpeas</div></div>
+          <div class="menu-item reveal reveal-delay-3"><div class="menu-item-header"><span class="menu-item-name">Fish Amritsari</span><span class="menu-item-price">Rs. 890</span></div><div class="menu-item-desc">Crispy battered sole fish with besan batter and chaat masala</div></div>
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Shami Kebab</span><span class="menu-item-price">Rs. 580</span></div><div class="menu-item-desc">Slow-cooked minced beef and lentil patties with ginger and green chilies</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Chapli Kebab</span><span class="menu-item-price">Rs. 680</span></div><div class="menu-item-desc">Peshawari-style minced beef patty with dried pomegranate seeds</div></div>
+        </div>
+      </div>
+
+      <!-- Mains -->
+      <div class="menu-category" id="mains">
+        <div class="menu-grid">
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Chicken Karahi</span><span class="menu-item-price">Rs. 1,290</span></div><div class="menu-item-desc">Traditional wok-cooked chicken with tomatoes, ginger, and fresh coriander</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Mutton Nihari</span><span class="menu-item-price">Rs. 1,490</span></div><div class="menu-item-desc">Slow-cooked lamb shank in rich, spiced gravy — an overnight labor of love</div></div>
+          <div class="menu-item reveal reveal-delay-2"><div class="menu-item-header"><span class="menu-item-name">Biryani Degh</span><span class="menu-item-price">Rs. 1,190</span></div><div class="menu-item-desc">Layered basmati rice with tender chicken, saffron, and fried onions</div></div>
+          <div class="menu-item reveal reveal-delay-3"><div class="menu-item-header"><span class="menu-item-name">Dal Makhani</span><span class="menu-item-price">Rs. 690</span></div><div class="menu-item-desc">Black lentils simmered overnight with cream and aromatic spices</div></div>
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Grilled Lamb Chops</span><span class="menu-item-price">Rs. 1,890</span></div><div class="menu-item-desc">Tender lamb chops marinated in papaya and spices, grilled to perfection</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Palak Paneer</span><span class="menu-item-price">Rs. 790</span></div><div class="menu-item-desc">Creamed spinach with house-made cottage cheese, finished with cream</div></div>
+        </div>
+      </div>
+
+      <!-- Desserts -->
+      <div class="menu-category" id="desserts">
+        <div class="menu-grid">
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Gulab Jamun</span><span class="menu-item-price">Rs. 350</span></div><div class="menu-item-desc">Deep-fried milk dumplings soaked in rose-scented sugar syrup</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Kheer</span><span class="menu-item-price">Rs. 390</span></div><div class="menu-item-desc">Creamy rice pudding with cardamom, saffron, and slivered almonds</div></div>
+          <div class="menu-item reveal reveal-delay-2"><div class="menu-item-header"><span class="menu-item-name">Gajar ka Halwa</span><span class="menu-item-price">Rs. 420</span></div><div class="menu-item-desc">Traditional carrot dessert slow-cooked with milk, sugar, and ghee</div></div>
+          <div class="menu-item reveal reveal-delay-3"><div class="menu-item-header"><span class="menu-item-name">Rabri</span><span class="menu-item-price">Rs. 450</span></div><div class="menu-item-desc">Clotted sweetened milk flavored with cardamom and pistachio</div></div>
+          <div class="menu-item reveal"><div class="menu-item-header"><span class="menu-item-name">Pistachio Kulfi</span><span class="menu-item-price">Rs. 380</span></div><div class="menu-item-desc">Traditional Indian ice cream with crushed pistachios and saffron</div></div>
+          <div class="menu-item reveal reveal-delay-1"><div class="menu-item-header"><span class="menu-item-name">Sohan Halwa</span><span class="menu-item-price">Rs. 320</span></div><div class="menu-item-desc">Lahori-style semolina and ghee confection with nuts</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery">
+    <div class="container">
+      <div class="reveal" style="text-align:center">
+        <div class="section-label">Gallery</div>
+        <h2 class="section-title">Views That Inspire</h2>
+        <p class="section-subtitle" style="margin:0 auto">The beauty of Monal — captured in every corner</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item reveal"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Terrace View</span></div></div></div>
+        <div class="gallery-item reveal reveal-delay-1"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg><span>Interior</span></div></div></div>
+        <div class="gallery-item reveal reveal-delay-2"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span>Architecture</span></div></div></div>
+        <div class="gallery-item reveal"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Sunset</span></div></div></div>
+        <div class="gallery-item reveal reveal-delay-1"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Dining</span></div></div></div>
+        <div class="gallery-item reveal reveal-delay-2"><div class="gallery-item-inner"><div class="gallery-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Mountain View</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reservation -->
+  <section id="reservation">
+    <div class="container">
+      <div class="reveal" style="text-align:center">
+        <div class="section-label">Reservations</div>
+        <h2 class="section-title">Book Your Experience</h2>
+        <p class="section-subtitle" style="margin:0 auto">Reserve your table and enjoy an unforgettable evening overlooking Islamabad</p>
+      </div>
+      <div class="reservation-grid">
+        <div class="reservation-info reveal reveal-delay-1">
+          <h3>We Look Forward to Hosting You</h3>
+          <p>Whether it's a romantic dinner for two, a family celebration, or a corporate gathering, our team ensures every visit is extraordinary. For groups larger than 8, please call us directly.</p>
+          <div class="info-item">
+            <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="info-text"><h4>Hours</h4><p>Daily: 12:00 PM – 11:30 PM</p></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div class="info-text"><h4>Location</h4><p>Pir Sohawa Road, Margalla Hills, Islamabad</p></div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+            <div class="info-text"><h4>Phone</h4><p>+92 51 835 5000</p></div>
+          </div>
+        </div>
+        <form class="reservation-form reveal reveal-delay-3" onsubmit="event.preventDefault(); alert('Reservation request submitted! We will contact you shortly.')">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" placeholder="your@email.com" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" placeholder="+92 XXX XXXXXXX" required>
+            </div>
+            <div class="form-group">
+              <label>Date</label>
+              <input type="date" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Time</label>
+              <select required>
+                <option value="">Select time</option>
+                <option>12:00 PM</option>
+                <option>1:00 PM</option>
+                <option>2:00 PM</option>
+                <option>6:00 PM</option>
+                <option>7:00 PM</option>
+                <option>8:00 PM</option>
+                <option>9:00 PM</option>
+                <option>10:00 PM</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Guests</label>
+              <select required>
+                <option value="">Number of guests</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option>
+                <option>5</option><option>6</option><option>7</option><option>8+</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Special Requests</label>
+            <textarea placeholder="Dietary requirements, occasions, seating preferences…"></textarea>
+          </div>
+          <button type="submit" class="btn-primary form-submit">Confirm Reservation →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Monal</h3>
+        <p>Islamabad's most celebrated dining destination, perched on the Margalla Hills since 1998. Where every meal comes with a view.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reservation">Reservations</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+92518355000">+92 51 835 5000</a>
+        <a href="mailto:info@monal.com.pk">info@monal.com.pk</a>
+        <a href="#">Pir Sohawa Road</a>
+        <a href="#">Margalla Hills</a>
+      </div>
+      <div class="footer-col">
+        <h4>Follow Us</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Twitter</a>
+        <a href="#">TripAdvisor</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Monal Islamabad. All rights reserved.</span>
+      <span>Crafted with care in Islamabad</span>
+    </div>
+  </footer>
+
+  <script>
+    // Particles
+    (function() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 8 + 's';
+        p.style.animationDuration = (6 + Math.random() * 4) + 's';
+        p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+        container.appendChild(p);
+      }
+    })();
+
+    // Nav scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Menu tabs
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.menu-category').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.category).classList.add('active');
+      });
+    });
+
+    // Mobile menu
+    document.querySelector('.mobile-toggle').addEventListener('click', () => {
+      const links = document.querySelector('.nav-links');
+      links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+      links.style.flexDirection = 'column';
+      links.style.position = 'absolute';
+      links.style.top = '100%';
+      links.style.left = '0';
+      links.style.right = '0';
+      links.style.background = nav.classList.contains('scrolled') ? 'rgba(250,246,240,0.98)' : 'rgba(26,20,18,0.98)';
+      links.style.padding = '24px';
+      links.style.gap = '16px';
+      if (nav.classList.contains('scrolled')) {
+        links.querySelectorAll('a').forEach(a => a.style.color = 'var(--ink-soft)');
+      }
+    });
+  </script>
+</body>
+</html>
